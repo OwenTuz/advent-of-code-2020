@@ -75,16 +75,15 @@ fn part2(input: &Vec<&str>) -> isize {
         let swap = split.next().unwrap();
         let arg = split.next().unwrap();
         if swap != "acc" {
+
             let new = match swap {
                 "jmp" => vec![ "nop", arg ].join(" "),
                 "nop" => vec![ "jmp", arg ].join(" "),
                 _     => panic!("Unexpected instruction {} when swapping", swap),
             };
-            let code = input.clone()
-                             .iter()
-                             .enumerate()
-                             .map(|(pos,inst)| if pos == i { new.as_str() } else {inst })
-                             .collect::<Vec<&str>>();
+            let mut code = input.clone();
+            code[i] = new.as_str();
+
             let program = Program::new(&code);
             let mut pc_values_visited = HashSet::new();
             for (acc, pc) in program.take_while(|(_, pc)| *pc != input.len()) {
